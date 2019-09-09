@@ -12,18 +12,18 @@ struct deleter {
 	template <class T> void operator () (T* p) { delete p; }
 };
 
-class Controller {	//¿ØÖÆÆ÷£¬ÓÃÀ´´¢´æÕË»§ÁĞ±íºÍ´¦ÀíÃüÁî
+class Controller {	//æ§åˆ¶å™¨ï¼Œç”¨æ¥å‚¨å­˜è´¦æˆ·åˆ—è¡¨å’Œå¤„ç†å‘½ä»¤
 private:
-	Date date;					//µ±Ç°ÈÕÆÚ
-	vector<Account *> accounts;	//ÕË»§ÁĞ±í
-	bool end;					//ÓÃ»§ÊÇ·ñÊäÈëÁËÍË³öÃüÁî
+	Date date;					//å½“å‰æ—¥æœŸ
+	vector<Account *> accounts;	//è´¦æˆ·åˆ—è¡¨
+	bool end;					//ç”¨æˆ·æ˜¯å¦è¾“å…¥äº†é€€å‡ºå‘½ä»¤
 
 public:
 	Controller(const Date &date) : date(date), end(false) { }
 	~Controller();
 	const Date &getDate() const { return date; }
 	bool isEnd() const { return end; }
-	//Ö´ĞĞÒ»ÌõÃüÃû£¬·µ»Ø¸ÃÃüÁîÊÇ·ñ¸Ä±äÁËµ±Ç°×´Ì¬£¨¼´ÊÇ·ñĞèÒª±£´æ¸ÃÃüÁî£©
+	//æ‰§è¡Œä¸€æ¡å‘½åï¼Œè¿”å›è¯¥å‘½ä»¤æ˜¯å¦æ”¹å˜äº†å½“å‰çŠ¶æ€ï¼ˆå³æ˜¯å¦éœ€è¦ä¿å­˜è¯¥å‘½ä»¤ï¼‰
 	bool runCommand(const string &cmdLine);
 };
 Controller::~Controller() {
@@ -40,7 +40,7 @@ bool Controller::runCommand(const string &cmdLine) {
 
 	str >> cmd;
 	switch (cmd) {
-	case 'a':	//Ôö¼ÓÕË»§
+	case 'a':	//å¢åŠ è´¦æˆ·
 		str >> type >> id;
 		if (type == 's') {
 			str >> rate;
@@ -51,21 +51,21 @@ bool Controller::runCommand(const string &cmdLine) {
 		}
 		accounts.push_back(account);
 		return true;
-	case 'd':	//´æÈëÏÖ½ğ
+	case 'd':	//å­˜å…¥ç°é‡‘
 		str >> index >> amount;
 		getline(str, desc);
 		accounts[index]->deposit(date, amount, desc);
 		return true;
-	case 'w':	//È¡³öÏÖ½ğ
+	case 'w':	//å–å‡ºç°é‡‘
 		str >> index >> amount;
 		getline(str, desc);
 		accounts[index]->withdraw(date, amount, desc);
 		return true;
-	case 's':	//²éÑ¯¸÷ÕË»§ĞÅÏ¢
+	case 's':	//æŸ¥è¯¢å„è´¦æˆ·ä¿¡æ¯
 		for (size_t i = 0; i < accounts.size(); i++)
 			cout << "[" << i << "] " << *accounts[i] << endl;
 		return false;
-	case 'c':	//¸Ä±äÈÕÆÚ
+	case 'c':	//æ”¹å˜æ—¥æœŸ
 		str >> day;
 		if (day < date.getDay())
 			cout << "You cannot specify a previous day";
@@ -74,7 +74,7 @@ bool Controller::runCommand(const string &cmdLine) {
 		else
 			date = Date(date.getYear(), date.getMonth(), day);
 		return true;
-	case 'n':	//½øÈëÏÂ¸öÔÂ
+	case 'n':	//è¿›å…¥ä¸‹ä¸ªæœˆ
 		if (date.getMonth() == 12)
 			date = Date(date.getYear() + 1, 1, 1);
 		else
@@ -82,11 +82,11 @@ bool Controller::runCommand(const string &cmdLine) {
 		for (vector<Account*>::iterator iter = accounts.begin(); iter != accounts.end(); ++iter)
 			(*iter)->settle(date);
 		return true;
-	case 'q':	//²éÑ¯Ò»¶ÎÊ±¼äÄÚµÄÕËÄ¿
+	case 'q':	//æŸ¥è¯¢ä¸€æ®µæ—¶é—´å†…çš„è´¦ç›®
 		str >> date1 >> date2;
 		Account::query(date1, date2);
 		return false;
-	case 'e':	//ÍË³ö
+	case 'e':	//é€€å‡º
 		end = true;
 		return false;
 	}
@@ -95,13 +95,13 @@ bool Controller::runCommand(const string &cmdLine) {
 }
 
 int main() {
-	Date date(2008, 11, 1);	//ÆğÊ¼ÈÕÆÚ
+	Date date(2008, 11, 1);	//èµ·å§‹æ—¥æœŸ
 	Controller controller(date);
 	string cmdLine;
 	const char *FILE_NAME = "commands.txt";
 
-	ifstream fileIn(FILE_NAME);	//ÒÔ¶ÁÄ£Ê½´ò¿ªÎÄ¼ş
-	if (fileIn) {	//Èç¹ûÕı³£´ò¿ª£¬¾ÍÖ´ĞĞÎÄ¼şÖĞµÄÃ¿Ò»ÌõÃüÁî
+	ifstream fileIn(FILE_NAME);	//ä»¥è¯»æ¨¡å¼æ‰“å¼€æ–‡ä»¶
+	if (fileIn) {	//å¦‚æœæ­£å¸¸æ‰“å¼€ï¼Œå°±æ‰§è¡Œæ–‡ä»¶ä¸­çš„æ¯ä¸€æ¡å‘½ä»¤
 		while (getline(fileIn, cmdLine)) {
 			try {
 				controller.runCommand(cmdLine);
@@ -111,18 +111,18 @@ int main() {
 				return 1;
 			}
 		}
-		fileIn.close();	//¹Ø±ÕÎÄ¼ş
+		fileIn.close();	//å…³é—­æ–‡ä»¶
 	}
 	
-	ofstream fileOut(FILE_NAME, ios_base::app);	//ÒÔ×·¼ÓÄ£Ê½
+	ofstream fileOut(FILE_NAME, ios_base::app);	//ä»¥è¿½åŠ æ¨¡å¼
 	cout << "(a)add account (d)deposit (w)withdraw (s)show (c)change day (n)next month (q)query (e)exit" << endl;
-	while (!controller.isEnd()) {	//´Ó±ê×¼ÊäÈë¶ÁÈëÃüÁî²¢Ö´ĞĞ£¬Ö±µ½ÍË³ö
+	while (!controller.isEnd()) {	//ä»æ ‡å‡†è¾“å…¥è¯»å…¥å‘½ä»¤å¹¶æ‰§è¡Œï¼Œç›´åˆ°é€€å‡º
 		cout << controller.getDate() << "\tTotal: " << Account::getTotal() << "\tcommand> ";
 		string cmdLine;
 		getline(cin, cmdLine);
 		try {
 			if (controller.runCommand(cmdLine))
-				fileOut << cmdLine << endl;	//½«ÃüÁîĞ´ÈëÎÄ¼ş
+				fileOut << cmdLine << endl;	//å°†å‘½ä»¤å†™å…¥æ–‡ä»¶
 		} catch (AccountException &e) {
 			cout << "Error(#" << e.getAccount()->getId() << "): " << e.what() << endl;
 		} catch (exception &e) {
