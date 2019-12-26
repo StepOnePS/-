@@ -6,7 +6,7 @@
 using namespace std;
 using namespace std::rel_ops;
 
-//AccountRecordÀàµÄÊµÏÖ
+//AccountRecordç±»çš„å®žçŽ°
 AccountRecord::AccountRecord(const Date &date, const Account *account, double amount, double balance, const std::string& desc)
 	: date(date), account(account), amount(amount), balance(balance), desc(desc) { }
 
@@ -14,7 +14,8 @@ void AccountRecord::show() const {
 	cout << date << "\t#" << account->getId() << "\t" << amount << "\t" << balance << "\t" << desc << endl;
 }
 
-//AccountÀàµÄÊµÏÖ
+
+//Accountç±»çš„å®žçŽ°
 double Account::total = 0;
 RecordMap Account::recordMap;
 Account::Account(const Date &date, const string &id)
@@ -23,7 +24,7 @@ Account::Account(const Date &date, const string &id)
 }
 
 void Account::record(const Date &date, double amount, const string &desc) {
-	amount = floor(amount * 100 + 0.5) / 100;	//±£ÁôÐ¡ÊýµãºóÁ½Î»
+	amount = floor(amount * 100 + 0.5) / 100;	//ä¿ç•™å°æ•°ç‚¹åŽä¸¤ä½
 	balance += amount;
 	total += amount;
 	AccountRecord record(date, this, amount, balance, desc);
@@ -48,7 +49,7 @@ void Account::query(const Date& begin, const Date& end) {
 	}
 }
 
-//SavingsAccountÀàÏà¹Ø³ÉÔ±º¯ÊýµÄÊµÏÖ
+//SavingsAccountç±»ç›¸å…³æˆå‘˜å‡½æ•°çš„å®žçŽ°
 SavingsAccount::SavingsAccount(const Date &date, const string &id, double rate)
 	: Account(date, id), rate(rate), acc(date, 0) { }
 
@@ -67,7 +68,7 @@ void SavingsAccount::withdraw(const Date &date, double amount, const string &des
 }
 
 void SavingsAccount::settle(const Date &date) {
-	if (date.getMonth() == 1) {	//Ã¿ÄêµÄÒ»ÔÂ¼ÆËãÒ»´ÎÀûÏ¢
+	if (date.getMonth() == 1) {	//æ¯å¹´çš„ä¸€æœˆè®¡ç®—ä¸€æ¬¡åˆ©æ¯
 		double interest = acc.getSum(date) * rate
 			/ (date - Date(date.getYear() - 1, 1, 1));
 		if (interest != 0)
@@ -76,7 +77,7 @@ void SavingsAccount::settle(const Date &date) {
 	}
 }
 
-//CreditAccountÀàÏà¹Ø³ÉÔ±º¯ÊýµÄÊµÏÖ
+//CreditAccountç±»ç›¸å…³æˆå‘˜å‡½æ•°çš„å®žçŽ°
 CreditAccount::CreditAccount(const Date& date, const string& id, double credit, double rate, double fee)
 	: Account(date, id), credit(credit), rate(rate), fee(fee), acc(date, 0) { }
 
